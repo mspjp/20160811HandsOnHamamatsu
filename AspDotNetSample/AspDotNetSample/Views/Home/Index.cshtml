@@ -14,7 +14,11 @@
 <body>
     <div>
         <input id="text_utterance" type="text" />
-        <button id="button_request">ClickMe!</button>
+        <button id="button_request">Send</button>
+        <br />
+        <ul>
+            <li id="list_messages"></li>
+        </ul>
     </div>
 
 
@@ -25,9 +29,25 @@
             var parameter = {
                 utterance:utterance
             };
-            $.get("/Home/Api", parameter, function (data) {
-                alert(data.param);
+            
+            $.ajax({
+                 url: "/Home/Api",
+                 type: 'GET',
+                 data: JSON.stringify(parameter),   // JSONの文字列に変換
+                 dataType: 'json',
+                 contentType: 'application/json',    // content-typeをJSONに指定する
+                 error: function (data) {
+                     alert(data);
+                 },
+                 complete: function (data) {
+                     var json = data.responseText;
+                     var obj = JSON.parse(json);
+                     $('#list_messages').append('<p><b>システム: </b>' + obj.utterance + '</p>');
+                 },
             });
+
+            $('#list_messages').append('<p><b>あなた: </b>' + utterance + '</p>');
+            $('#text_utterance').val('');
         });
     </script>
 </body>
