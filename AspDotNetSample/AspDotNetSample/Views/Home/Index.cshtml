@@ -9,14 +9,14 @@
     <meta name="viewport" content="width=device-width" />
     <title></title>
     <link rel="stylesheet" href="~/Content/bootstrap.css" />
-
+    <link rel="stylesheet" href="~/Content/Site.css" />
 </head>
 <body>
     <div>
         <input id="text_utterance" type="text" />
         <button id="button_request">Send</button>
         <br />
-        <ul>
+        <ul id="ul_messages">
             <li id="list_messages"></li>
         </ul>
     </div>
@@ -42,11 +42,22 @@
                  complete: function (data) {
                      var json = data.responseText;
                      var obj = JSON.parse(json);
-                     $('#list_messages').append('<p><b>システム: </b>' + obj.utterance + '</p>');
+                     $('#list_messages').append(
+                         '<p class="system_box">'
+                         + '<span class="system_name">システム: </span>'
+                         + '<span class="system_utterance">' +obj.utterance + '</span>'
+                         + '</p>'
+                         );
                  },
             });
 
-            $('#list_messages').append('<p><b>あなた: </b>' + utterance + '</p>');
+            $('#list_messages').append(
+                 '<p class="user_box">'
+                 +'<span class="user_name">あなた: </span>'
+                 + '<span class="system_utterance">' + utterance + '</span>'
+                 + '</p>'
+                );
+
             $('#text_utterance').val('');
         });
     </script>
