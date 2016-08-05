@@ -1,0 +1,129 @@
+<!-- チャットルームの画面 -->
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Node.jsChatApp</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <!-- My StyleSeet -->
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <h1>Welcome Text Chatroom!</h1>
+
+    <div id="main-container" class="container">
+        <!-- チャットルームの人数を表示 -->
+        <p>
+           現在のチャットルームの人数
+           <strong id='usercount'></strong>
+           人
+        </p>
+        <p>
+           <strong id='username'></strong>
+           としてログインしています
+        </p>
+        <!-- チャット入力用コントロール -->
+        <input id="message" type="text" class="form-control" placeholder="Hello!" />
+        <input id="button-send" type="button" value="send" class="btn btn-default pull-right" />
+        <!-- チャットルームの発言を表示 -->
+        <ul id="message-list"></ul>
+    </div>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <!-- WebSocket用ライブラリsocket.ioを読み込む(ファイルは自動生成されている) -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- ページが読み込まれた時に実行されるスクリプト -->
+    <script type="text/javascript">
+        //stream.ioライブラリ
+        var socket = io();
+        var username = 'unknown';
+        $(function(){
+            //クッキーからログイン画面で入力されたユーザー名を取得する
+            var cookies = document.cookie.split('; ');
+            var unescapedname = '';
+            for(var i=0;i<cookies.length;i++){
+                var pair = cookies[i].split('=');
+                if(pair[0]==='name'){
+                    unescapedname = pair[1];
+                }
+            }
+            //もしクッキーに名前が登録されてなかったらログインページへ
+            if(unescapedname===undefined){
+                document.location.href = './index.html';
+            }
+            //デコード
+            username = decodeURIComponent(unescapedname);
+            //ユーザー名をセット
+            $('#username').text(username);
+
+            //誰かが発言したらこの中が実行される
+            socket.on('broadcast-message',function(data){
+
+                //発言内容を発言リストに表示
+                var list = $('#message-list');
+                list.prepend('<li class="li-message">'+data.name+':'+data.message+'</li>')
+
+            });
+
+            //誰かがログインしたらこの中が実行される
+            socket.on('broadcast-login',function(data){
+
+                //チャットルームの人数を変更し、ログインしたことを表示
+                $('#usercount').text(data.count);
+                $('#message-list').prepend('<li class="li-message system-message">'+data.name+'さんがログインしました</li>');
+
+            });
+
+            //誰かがログアウトしたらこの中が実行される
+            socket.on('broadcast-logout',function(data){
+
+                //チャットルームの人数を変更し、ログアウトしたことを表示
+                $('#usercount').text(data.count);
+                $('#message-list').prepend('<li class="li-message system-message">'+data.name+'さんがログアウトしました</li>');
+
+            });
+
+            //ウインドウがロードされた時
+            window.onload = function(event){
+
+                //自分がログインしたことを送信する
+                socket.emit('login',username);
+
+            };
+
+            //sendボタンがクリックされたとき
+            $('#button-send').click(function(){
+
+                //発言を取り出してユーザー名とともに送信する
+                var message = $('#message').val();
+                var data = {
+                  name:username,
+                  message:message
+                };
+                socket.emit('message',data);
+                $('#message').val('');
+
+            });
+
+            //ウインドウがアンロードされたとき
+            window.onunload = function(event){
+
+                //自分がログアウトしたことを送信する
+                socket.emit('logout',username);
+
+            };
+
+        });
+
+    </script>
+
+  </body>
+</html>
