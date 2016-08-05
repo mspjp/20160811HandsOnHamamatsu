@@ -53,6 +53,7 @@ namespace WpfSample
             previousContext = responseParam.context;
 
             listView_messages.Items.Insert(0, "システム: " + responseParam.utt);
+            textBox_utterance.Text = "";
         }
     }
 }
