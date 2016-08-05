@@ -1,42 +1,39 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 using Dialog;
+using System.Net.Http;
+using Newtonsoft.Json;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
-namespace UwpSample
+namespace WpfSample
 {
     /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// MainWindow.xaml の相互作用ロジック
     /// </summary>
-    public sealed partial class MainPage : Page
+    public partial class MainWindow : Window
     {
         static string previousContext = "";
 
-        public MainPage()
+        public MainWindow()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
         private async void button_send_Click(object sender, RoutedEventArgs e)
         {
             string utterance = textBox_utterance.Text;
-            listView_messages.Items.Insert(0,"あなた: "+utterance);
+            listView_messages.Items.Insert(0, "あなた: " + utterance);
 
             string apiKey = "6863673132504d57574b32583564796867516a4b624630386d61486e4163646c5442446438787731746c37";
             string url = "https://api.apigw.smt.docomo.ne.jp/dialogue/v1/dialogue?APIKEY=" + apiKey;
@@ -52,11 +49,10 @@ namespace UwpSample
 
             var responseJson = await response.Content.ReadAsStringAsync();
             DialogResponse responseParam = JsonConvert.DeserializeObject<DialogResponse>(responseJson);
-            
+
             previousContext = responseParam.context;
 
-            listView_messages.Items.Insert(0,"システム: "+responseParam.utt);
-            textBox_utterance.Text = "";
+            listView_messages.Items.Insert(0, "システム: " + responseParam.utt);
         }
     }
 }

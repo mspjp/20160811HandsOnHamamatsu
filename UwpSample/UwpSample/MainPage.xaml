@@ -8,8 +8,8 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBox x:Name="textBox_utterance" HorizontalAlignment="Left" Margin="233,60,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="400"/>
-        <Button x:Name="button_send" Content="Send" HorizontalAlignment="Left" Margin="675,60,0,0" VerticalAlignment="Top" Width="96" Click="button_send_Click"/>
+        <TextBox x:Name="textBox_utterance" HorizontalAlignment="Left" Margin="57,46,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="400"/>
+        <Button x:Name="button_send" Content="Send" HorizontalAlignment="Left" Margin="478,44,0,0" VerticalAlignment="Top" Width="96" Click="button_send_Click"/>
         <ListView x:Name="listView_messages" Margin="50,120,50,50"/>
 
     </Grid>
