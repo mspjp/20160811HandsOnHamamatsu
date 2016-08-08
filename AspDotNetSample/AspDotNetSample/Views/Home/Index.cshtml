@@ -1,5 +1,6 @@
 ﻿
 @{
+    // レイアウト一括管理せず
     Layout = null;
 }
 
@@ -12,36 +13,37 @@
     <link rel="stylesheet" href="~/Content/Site.css" />
 </head>
 <body>
-    <div>
-        <input id="text_utterance" type="text" />
-        <button id="button_request">Send</button>
+    <div><!-- 基本UI -->
+        <input id="text_utterance" type="text" /> <!-- 送る言葉の入力フォーム-->
+        <button id="button_request">Send</button> <!-- 送信ボタン -->
         <br />
-        <ul id="ul_messages">
+        <ul id="ul_messages"> <!-- リクエストとレスポンスの挿入ベース-->
             <li id="list_messages"></li>
         </ul>
     </div>
 
 
-    <script type="text/javascript" src="~/Scripts/jquery-3.1.0.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery-3.1.0.js"></script> <!-- API叩き用 jQuery -->
     <script>
-        $("#button_request").click(function () {
-            var utterance = $("#text_utterance").val();
+        $("#button_request").click(function () { //送信ボタンクリック時のイベント設定
+            var utterance = $("#text_utterance").val(); // フォーム内部の文字を取得
             var parameter = {
                 utterance:utterance
-            };
+            }; //送信パラメータを取得
             
-            $.ajax({
-                 url: "/Home/Api",
-                 type: 'GET',
+            $.ajax({ //ajax(非同期通信)開始
+                 url: "/Home/Api", // HomeコントローラのApiを
+                 type: 'GET', // HTTP通信をGETにて行う
                  data: JSON.stringify(parameter),   // JSONの文字列に変換
-                 dataType: 'json',
+                 dataType: 'json', // JSON型の使用宣言
                  contentType: 'application/json',    // content-typeをJSONに指定する
-                 error: function (data) {
-                     alert(data);
+                 error: function (data) { // 失敗時の動作
+                     alert(data); // アラートの出力
                  },
-                 complete: function (data) {
-                     var json = data.responseText;
-                     var obj = JSON.parse(json);
+                 complete: function (data) { // 完了時の動作
+                     var json = data.responseText; //データを取得
+                     var obj = JSON.parse(json); // JSONをパース
+                     // UIにシステムから会話の内容を追加
                      $('#list_messages').append(
                          '<p class="system_box">'
                          + '<span class="system_name">システム: </span>'
@@ -51,6 +53,8 @@
                  },
             });
 
+
+            // UIに自分が送った会話の内容を追加
             $('#list_messages').append(
                  '<p class="user_box">'
                  +'<span class="user_name">あなた: </span>'
@@ -58,7 +62,7 @@
                  + '</p>'
                 );
 
-            $('#text_utterance').val('');
+            $('#text_utterance').val(''); //フォームを空に
         });
     </script>
 </body>
