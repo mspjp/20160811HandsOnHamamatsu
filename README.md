@@ -5,4 +5,4 @@
 
 [告知ページ](http://mspjp.connpass.com/event/36739/)
 
-[ハンズオン資料](https://1drv.ms/f/s!ArFh3sO2nfyGdDIbyWyZfdMLgGU)
+[ハンズオン資料](https://1drv.ms/f/s!ArFh3sO2nfyGdO6GMQeHxF24El4)
