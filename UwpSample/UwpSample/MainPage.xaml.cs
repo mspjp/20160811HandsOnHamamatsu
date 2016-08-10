@@ -64,7 +64,7 @@ namespace UwpSample
             var responseJson = response.Content.ReadAsStringAsync().Result;
             // 読み込んだデータをクラス型に変換
             DialogResponse responseParam = JsonConvert.DeserializeObject<DialogResponse>(responseJson);
-
+            // グローバル変数に今回の通信内容を保存
             previousContext = responseParam.context;
 
             listView_messages.Items.Insert(0,"システム: "+responseParam.utt);
