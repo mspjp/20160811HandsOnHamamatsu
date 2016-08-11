@@ -32,7 +32,7 @@
             }; //送信パラメータを取得
             
             $.ajax({ //ajax(非同期通信)開始
-                 url: "/Home/Api", // HomeコントローラのApiを
+                 url: "/Home/Api?utterance=" + utterance, // HomeコントローラのApiを
                  type: 'GET', // HTTP通信をGETにて行う
                  data: JSON.stringify(parameter),   // JSONの文字列に変換
                  dataType: 'json', // JSON型の使用宣言
